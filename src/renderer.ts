@@ -22,12 +22,18 @@ export type RenderResult = {
 
 let server: http.Server
 
-export type InitArgs = { script: string; args?: any }
+export type InitArgs = { script: string; args?: any; customerServer?: string }
 
 const init = createHandler('init', async (args: InitArgs | undefined) => {
   if (!args) throw new Error('args is required')
   const fn = require(args.script).default
-  server = new http.Server(await fn(args.args)).listen(0)
+  if (args.customerServer) {
+    const getServer = require(args.customerServer).default
+    const nextHandler = await fn(args, args)
+    server = await getServer(nextHandler)
+  } else {
+    server = new http.Server(await fn(args.args)).listen(0)
+  }
 })
 
 const render = createHandler(

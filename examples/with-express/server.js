@@ -1,4 +1,4 @@
-const CachedHandler = require('next-boost').default
+const CachedHandler = require('@vegawong/next-boost').default
 const express = require('express')
 const server = express()
 const port = parseInt(process.env.PORT, 10) || 3000
@@ -16,16 +16,21 @@ async function main() {
     handler = await init(args)
   } else {
     const script = require.resolve('./init')
-    const cached = await CachedHandler({ script, args })
+    const cached = await CachedHandler(
+      {
+        script,
+        args,
+        customerServer: require.resolve('./cacheServer')
+      },
+    )
     handler = cached.handler
   }
+
   server.get('*', handler)
 
-  server.listen(port, (err) => {
+  server.listen(port, err => {
     if (err) throw err
-    console.log(
-      `> Ready on http://localhost:${port}, dev ${dev ? 'on' : 'off'} `
-    )
+    console.log(`> Ready on http://localhost:${port}, dev ${dev ? 'on' : 'off'} `)
   })
 }
 

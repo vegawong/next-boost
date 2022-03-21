@@ -32,6 +32,7 @@ export default function Home({ now }) {
   )
 }
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (ctx) => {
+  console.log(ctx.req.additionalData)
   return { props: { now: new Date().toISOString() } }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@next-boost/next-boost",
+  "name": "@vegawong/next-boost",
   "version": "0.15.1",
   "description": "Add a cache layer for next.js SSR pages. Use stale-while-revalidate to boost the performance.",
   "main": "dist/handler.js",
@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "rm -rf dist && swc src --out-dir dist",
+    "watch": "rm -rf dist && swc src --out-dir dist --watch",
     "prepublishOnly": "yarn tsc && yarn test",
     "lint": "eslint src/*.ts test/*.ts",
     "test": "jest"
@@ -17,16 +18,17 @@
     "README.md"
   ],
   "author": {
-    "name": "Rakuraku Jyo",
-    "email": "jyo.rakuraku@gmail.com"
+    "name": "vegawong",
+    "email": "vegawong1024@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:next-boost/next-boost.git"
+    "url": "git@github.com:vegawong/next-boost.git"
   },
-  "homepage": "https://github.com/next-boost/next-boost",
+  "homepage": "https://github.com/vegawong/next-boost",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.17.3",
     "http-graceful-shutdown": "^3.1.5",
     "multee": "^0.2.3"
   },
@@ -39,12 +41,14 @@
     "@swc/cli": "^0.1.51",
     "@swc/core": "^1.2.109",
     "@swc/jest": "^0.2.5",
+    "@types/express": "^4.17.13",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.10",
     "@types/supertest": "^2.0.10",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
+    "chokidar": "^3.5.3",
     "dotenv": "^10.0.0",
     "eslint": "^7.9.0",
     "jest": "^27.0.1",

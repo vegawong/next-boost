@@ -29,7 +29,7 @@ const init = createHandler('init', async (args: InitArgs | undefined) => {
   const fn = require(args.script).default
   if (args.customerServer) {
     const getServer = require(args.customerServer).default
-    const nextHandler = await fn(args, args)
+    const nextHandler = await fn(args.args)
     server = await getServer(nextHandler)
   } else {
     server = new http.Server(await fn(args.args)).listen(0)

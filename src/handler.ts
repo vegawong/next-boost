@@ -8,6 +8,11 @@ import Renderer, { InitArgs } from './renderer'
 import { CacheAdapter, HandlerConfig, WrappedHandler } from './types'
 import { filterUrl, isZipped, log, mergeConfig, serve } from './utils'
 
+const encodeKey = (key: string) => {
+  // 解密：decodeURIComponent(Buffer.from(str, 'base64').toString())
+  return Buffer.from(encodeURIComponent(key)).toString('base64')
+}
+
 function matchRules(conf: HandlerConfig, req: IncomingMessage) {
   const err = ['GET', 'HEAD'].indexOf(req.method ?? '') === -1
   if (err) return { matched: false, ttl: -1 }
@@ -53,6 +58,7 @@ const wrap: WrappedHandler = (cache, conf, renderer, next, metrics) => {
 
     const state = await serveCache(cache, key, forced)
     res.setHeader('x-next-boost-status', state.status)
+    res.setHeader('x-next-boost-key', encodeKey(key))
     metrics.inc(state.status)
 
     if (state.status === 'stale' || state.status === 'hit' || state.status === 'fulfill') {

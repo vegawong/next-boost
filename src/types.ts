@@ -30,6 +30,9 @@ export interface HandlerConfig {
   paramFilter?: ParamFilter
   cacheKey?: CacheKeyBuilder
   metrics?: boolean
+  beforeSend?: (payload: PagePayload, req: any, res: any) => Promise<void> 
+  beforeCache?: (payload: PagePayload) => Promise<void>
+  
 }
 
 export interface URLCacheRule {

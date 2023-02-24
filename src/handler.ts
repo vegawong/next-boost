@@ -62,6 +62,7 @@ const wrap: WrappedHandler = (cache, conf, renderer, next, metrics) => {
     metrics.inc(state.status)
 
     if (state.status === 'stale' || state.status === 'hit' || state.status === 'fulfill') {
+      await conf.beforeSend?.(state.payload, req, res)
       send(state.payload, res)
       if (!conf.quiet) log(start, state.status, req.url) // record time for stale and hit
       if (state.status !== 'stale') return // stop here
@@ -84,6 +85,7 @@ const wrap: WrappedHandler = (cache, conf, renderer, next, metrics) => {
       if (rv.statusCode === 200) {
         // save gzipped data
         const payload = { headers: rv.headers, body: isZipped(rv.headers) ? body : gzipSync(body) }
+        await conf.beforeCache?.(payload)
         await cache.set('payload:' + key, encodePayload(payload), ttl)
       }
     } catch (e) {
@@ -110,7 +112,7 @@ export default async function CachedHandler(args: InitArgs, options?: HandlerCon
 
   const renderer = Renderer()
   await renderer.init(args)
-  const plain = await require(args.script).default(args)
+  const plain = await require(args.script).default(args.args)
 
   const metrics = new Metrics()
 
